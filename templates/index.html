@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tasks-header">
+    <h2>Mes Tâches ({{ tasks|length }})</h2>
+    <div class="actions">
+        <a href="{{ url_for('sync_emails') }}" class="btn btn-primary">🔄 Sync Emails</a>
+        <a href="{{ url_for('add_task_manual') }}" class="btn btn-secondary">➕ Ajouter Manuellement</a>
+    </div>
+</div>
+
+{% if tasks %}
+<div class="tasks-grid">
+    {% for task in tasks %}
+    <div class="task-card priority-{{ task.priorite }}">
+        <div class="task-header">
+            <h3>{{ task.tache }}</h3>
+            <span class="priority-badge">{{ task.priorite }}</span>
+        </div>
+        
+        <div class="task-details">
+            {% if task.deadline %}
+            <p><strong>📅 Deadline:</strong> {{ task.deadline }}</p>
+            {% endif %}
+            
+            {% if task.info %}
+            <p><strong>ℹ️ Info:</strong> {{ task.info }}</p>
+            {% endif %}
+            
+            <p><small>Créé le: {{ task.created_at }}</small></p>
+        </div>
+        
+        <div class="task-actions">
+            <a href="{{ url_for('mark_task_done_route', task_id=task.id) }}" 
+               class="btn btn-success" 
+               onclick="return confirm('Marquer comme terminée?')">
+                ✓ Terminer
+            </a>
+            <a href="{{ url_for('delete_task_route', task_id=task.id) }}" 
+               class="btn btn-danger" 
+               onclick="return confirm('Supprimer cette tâche?')">
+                ✗ Supprimer
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>🎉 Aucune tâche en cours!</h3>
+    <p>Commencez par synchroniser vos emails ou ajoutez une tâche manuellement.</p>
+    <div class="empty-actions">
+        <a href="{{ url_for('sync_emails') }}" class="btn btn-primary">🔄 Synchroniser</a>
+        <a href="{{ url_for('add_task_manual') }}" class="btn btn-secondary">➕ Ajouter Tâche</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail2Tasks - Gestionnaire de Tâches</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📧 Mail2Tasks</h1>
+            <p>Gestionnaire de tâches depuis vos emails</p>
+            {% if processed_count is defined %}
+            <p class="processed-count">📊 Emails traités: {{ processed_count }}</p>
+            {% endif %}
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <nav class="navigation">
+            <a href="{{ url_for('index') }}" class="nav-link">📋 Tâches</a>
+            <a href="{{ url_for('add_task_manual') }}" class="nav-link">➕ Ajouter</a>
+            <a href="{{ url_for('sync_emails') }}" class="nav-link">🔄 Synchroniser</a>
+            <a href="{{ url_for('debug_email') }}" class="nav-link">🐛 Debug Email</a>
+            <a href="{{ url_for('reset_processed_emails') }}" class="nav-link" onclick="return confirm('Reset la liste des emails traités? Cela permettra de retraiter tous les emails.')">🔄 Reset Sync</a>
+        </nav>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>Mail2Tasks v1.1 - Système anti-doublons activé</p>
+        </footer>
+    </div>
+
+    <script>
+        // Confirmation pour les actions critiques
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteLinks = document.querySelectorAll('a[href*="/delete/"], a[href*="/done/"]');
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!confirm('Êtes-vous sûr de vouloir effectuer cette action ?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

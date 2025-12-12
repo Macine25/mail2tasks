@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>➕ Ajouter une Tâche Manuellement</h2>
+    
+    <form method="POST" class="task-form">
+        <div class="form-group">
+            <label for="tache">📝 Description de la tâche *</label>
+            <textarea name="tache" id="tache" required placeholder="Décrivez la tâche..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="priorite">🚨 Priorité</label>
+            <select name="priorite" id="priorite">
+                <option value="basse">Basse</option>
+                <option value="moyenne" selected>Moyenne</option>
+                <option value="haute">Haute</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="deadline">📅 Deadline (optionnel)</label>
+            <input type="date" name="deadline" id="deadline">
+        </div>
+        
+        <div class="form-group">
+            <label for="info">ℹ️ Informations complémentaires (optionnel)</label>
+            <textarea name="info" id="info" placeholder="Contexte, notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
